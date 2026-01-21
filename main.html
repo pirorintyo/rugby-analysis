@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メイン画面</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<!--上のバー-->
+<main class="board">
+    <section class="grid">
+        <!--1行目の題名-->
+        <div class="option">オプション</div>
+        <div class="fact">事実</div>
+        <div class="reason">判断理由</div>
+
+        <!--２行目の題名-->
+        <div class="cell"></div>    
+        <div class="cell fact">オンザボール</div>    
+        <div class="cell fact">オフザボール</div>    
+        <div class="cell"></div>   
+        
+        <!--入力エリア-->
+        <div class="cell">
+            <!--オプションのコメントボックスが増える-->
+            <div class="stack" id="optionStack">
+                <!--初期状態はボタンだけ-->
+                <button type="button" class="plus" data-stack="optionStack">+</button> 
+            </div>
+        </div>
+
+        <div class="cell">
+            <!--オンザボールのコメントボックスが増える-->
+            <div class="stack" id="onStack">
+                <button type="button" class="plus" data-stack="onStack">+</button>
+            </div>
+        </div>
+
+        <div class="cell">
+            <!--オフザボールのコメントボックスが増える-->
+            <div class="stack" id="offStack">
+                <button type="button" class="plus" data-stack="offStack">+</button>
+            </div>
+        </div>
+
+        <div class="cell">
+            <!--判断理由のコメントボックスが増える-->
+            <div class="stack" id="reasonStack">
+                <button type="button" class="plus" data-stack="reasonStack">+</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!--投稿バー-->
+<footer class="bottom">
+    <div class="bottom-left">
+        <span class="label">修正、維持、評価</span>
+        <input class="big-input" type="text">
+    </div>
+
+    <div class="bottom-right">
+        <input class="post-input" type="text" placeholder="投稿内容を記述">
+        <button type="button" class="post-button">投稿</button>
+    </div>
+</footer>
+
+<!--JSとの結合部分-->
+<script src="mian.js" defer></script>
+</body>
+</html>
