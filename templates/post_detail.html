@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>投稿詳細</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+
+  <header class="page-header">
+    <h1 class="page-title">投稿詳細</h1>
+
+    <!-- ✅ リンクは残す（要件） -->
+    <nav class="page-nav">
+      <a class="nav-link" href="{{ url_for('restore') }}">保存一覧に戻る</a>
+      <a class="nav-link" href="{{ url_for('main') }}">投稿画面へ</a>
+      <form method="post" action="{{ url_for('logout') }}" style="display:inline;">
+        <button type="submit" class="nav-link nav-button">ログアウト</button>
+      </form>
+    </nav>
+  </header>
+
+  <!-- mainと同じ盤面（formではなく表示専用） -->
+  <main class="board">
+    <section class="grid">
+      <!-- 1行目 -->
+      <div class="option">オプション</div>
+      <div class="fact">事実</div>
+      <div class="reason">判断理由</div>
+
+      <!-- 2行目 -->
+      <div class="cell"></div>
+      <div class="cell fact">オンザボール</div>
+      <div class="cell fact">オフザボール</div>
+      <div class="cell"></div>
+
+      <!-- 入力エリア（表示専用：＋ボタンは置かない） -->
+      <div class="cell">
+        <div class="stack" id="optionStack" data-key="options"></div>
+      </div>
+
+      <div class="cell">
+        <div class="stack" id="onStack" data-key="facts_on"></div>
+      </div>
+
+      <div class="cell">
+        <div class="stack" id="offStack" data-key="facts_off"></div>
+      </div>
+
+      <div class="cell">
+        <div class="stack" id="reasonStack" data-key="reasons"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ 投稿（送信）部分は削除。ただし情報は見たいので表示エリアだけ作る -->
+  <footer class="bottom detail-bottom">
+    <div class="bottom-left">
+      <span class="label">修正、維持、評価</span>
+      <input class="big-input" type="text" id="reflection" readonly>
+    </div>
+    <div class="bottom-right">
+      <input class="post-input" type="text" id="title" readonly>
+    </div>
+  </footer>
+
+  <!-- 詳細ページ復元用データ（サーバから渡す） -->
+  <script id="detailData" type="application/json">
+    {{ detail_data_json | safe }}
+  </script>
+
+  <!-- 詳細ページ専用JS -->
+  <script src="{{ url_for('static', filename='js/post_detail.js') }}" defer></script>
+</body>
+</html>

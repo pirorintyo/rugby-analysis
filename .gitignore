@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# venv
+venv/
+
+# env (秘密情報)
+.env
+
+# mac
+.DS_Store
+
+# logs
+*.log

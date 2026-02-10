@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メイン画面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <form id="postForm" action="{{ url_for('api_create_post') }}" method="post">
+        <main class="board">
+            <section class="grid">
+<!-- 1行目 -->
+                <div class="option">オプション</div>
+                <div class="fact">事実</div>
+                <div class="reason">判断理由</div>
+<!-- 2行目 -->
+                <div class="cell"></div>
+                <div class="cell fact">オンザボール</div>
+                <div class="cell fact">オフザボール</div>
+                <div class="cell"></div>
+<!-- 入力エリア -->
+                <div class="cell">
+                    <div class="stack" id="optionStack" data-key="options">
+                        <button type="button" class="plus" data-stack="optionStack">+</button>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class="stack" id="onStack" data-key="facts_on">
+                        <button type="button" class="plus" data-stack="onStack">+</button>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class="stack" id="offStack" data-key="facts_off">
+                        <button type="button" class="plus" data-stack="offStack">+</button>
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class="stack" id="reasonStack" data-key="reasons">
+                        <button type="button" class="plus" data-stack="reasonStack">+</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+<!-- ここが重要：columns_json を送る -->
+        <input type="hidden" id="columnsJson" name="columns_json" value="{}">
+<!-- 投稿バー -->
+        <footer class="bottom">
+            <div class="bottom-left">
+                <span class="label">修正、維持、評価</span>
+<!-- まずは1本（必要なら後で分割可） -->
+                <input class="big-input" type="text" name="reflection" id="reflection" placeholder="例：修正/維持/評価をまとめて入力">
+            </div>
+            <div class="bottom-right">
+<!-- あると一覧で便利 -->
+                <input class="post-input" type="text" name="title" id="title" placeholder="例：2026/01/19 駿河台戦">
+<!-- submit にする -->
+                <button type="submit" class="post-button">投稿</button>
+            </div>
+        </footer>
+<!-- 詳細ページ復元に使う：あればJSが復元する -->
+        <script id="initialData" type="application/json">
+            {{ initial_data_json | default("null") | safe }}
+        </script>
+    </form>
+<!-- JSとの結合部分 -->
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

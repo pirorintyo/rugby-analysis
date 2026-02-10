@@ -1,0 +1,385 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  color: #222;
+  background: #fff;
+}
+
+/* ===== 全体 ===== */
+form#postForm {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 盤面（グリッド部分） */
+.board {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 12px 16px;
+}
+
+/* ===== グリッド全体（表の外枠） ===== */
+.grid {
+  width: min(1100px, 96vw);
+  height: 100%;           /* ← 画面の残りを全部使う */
+  border: 1px solid #999;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 64px 52px 1fr;  /* ← 入力エリアが伸びる */
+  background: #fff;
+}
+
+/* ===== すべてのマスの基本（表の線） ===== */
+.grid > div{
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+}
+
+/* 右端の列は「右罫線」を消す（外枠があるので二重線防止） */
+.grid > div:nth-child(3),  /* 判断理由(ヘッダー) */
+.grid > div:nth-child(7),  /* 2行目右端(空) */
+.grid > div:nth-child(11)  /* 入力エリア右端 */
+{
+  border-right: none;
+}
+
+/* 最下段（入力エリアの行）は「下罫線」を消す（外枠があるので二重線防止） */
+.grid > div:nth-child(8),
+.grid > div:nth-child(9),
+.grid > div:nth-child(10),
+.grid > div:nth-child(11){
+  border-bottom: none;
+}
+
+/* ===== 各ブロックを正しい位置に配置（HTML変更なしで固定） ===== */
+/* 1行目 */
+.grid > div:nth-child(1){ grid-column: 1 / 2; grid-row: 1 / 2; }
+.grid > div:nth-child(2){ grid-column: 2 / 4; grid-row: 1 / 2; } /* 事実は2列結合 */
+.grid > div:nth-child(3){ grid-column: 4 / 5; grid-row: 1 / 2; }
+
+/* 2行目 */
+.grid > div:nth-child(4){ grid-column: 1 / 2; grid-row: 2 / 3; }
+.grid > div:nth-child(5){ grid-column: 2 / 3; grid-row: 2 / 3; }
+.grid > div:nth-child(6){ grid-column: 3 / 4; grid-row: 2 / 3; }
+.grid > div:nth-child(7){ grid-column: 4 / 5; grid-row: 2 / 3; }
+
+/* 3行目（入力エリア） */
+.grid > div:nth-child(8){ grid-column: 1 / 2; grid-row: 3 / 4; }
+.grid > div:nth-child(9){ grid-column: 2 / 3; grid-row: 3 / 4; }
+.grid > div:nth-child(10){ grid-column: 3 / 4; grid-row: 3 / 4; }
+.grid > div:nth-child(11){ grid-column: 4 / 5; grid-row: 3 / 4; }
+
+/* ===== 1行目の見た目（中央寄せ） ===== */
+.option, .fact, .reason{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ===== 2行目セル（中央寄せ） ===== */
+.grid > div:nth-child(4),
+.grid > div:nth-child(5),
+.grid > div:nth-child(6),
+.grid > div:nth-child(7){
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* ===== 入力セル ===== */
+.cell{
+  padding: 10px;
+  overflow: auto;
+}
+
+/* stack（入力欄が積まれる領域） */
+.stack{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px;
+}
+
+/* ＋ボタン（画像っぽく中央に） */
+.plus{
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cfcfcf;
+  background: #efefef;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  margin: 14px auto 0; /* 中央にぽつん */
+}
+
+.plus:hover {
+  background: #e5e5e5;
+}
+
+/* ===== 下部投稿バー ===== */
+.bottom {
+  border-top: 1px solid #9a9a9a;
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+
+/* 左：修正/維持/評価 */
+.bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 40%;
+}
+
+.label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.big-input {
+  width: min(520px, 45vw);
+  height: 40px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+/* 右：タイトル＆投稿 */
+.bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* タイトル入力 */
+.post-input {
+  width: min(420px, 40vw);
+  height: 40px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+/* 投稿ボタン */
+.post-button {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  background: #f1f1f1;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.post-button:hover {
+  background: #e7e7e7;
+}
+
+/* ===== スマホ対応（最低限） ===== */
+@media (max-width: 700px) {
+  .grid {
+    height: 62vh;
+  }
+  .bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .bottom-left, .bottom-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .big-input, .post-input {
+    width: 100%;
+  }
+}
+
+/* ===== 投稿詳細・保存一覧 共通（最低限） ===== */
+.page-header{
+  padding: 16px;
+  border-bottom: 1px solid #cfcfcf;
+}
+
+.page-title{
+  margin: 0;
+  font-size: 20px;
+}
+
+.page{
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.post-list{
+  width: min(1100px, 96vw);
+  display: grid;
+  gap: 12px;
+}
+
+.post-card{
+  border: 1px solid #cfcfcf;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+}
+
+.post-meta{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.post-user{
+  font-weight: 700;
+}
+
+.post-date{
+  color: #555;
+  font-size: 13px;
+}
+
+.post-main{
+  margin-top: 10px;
+}
+
+.post-title{
+  margin: 0 0 6px 0;
+  font-size: 16px;
+}
+
+.post-text{
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.post-hr{
+  margin: 14px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+.post-grid{
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 700px){
+  .post-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+.post-block{
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.post-subtitle{
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.post-ul{
+  margin: 0;
+  padding-left: 18px;
+}
+
+.post-li{
+  margin: 6px 0;
+  white-space: pre-wrap;
+}
+
+.post-empty{
+  margin: 0;
+  color: #666;
+}
+
+.post-actions{
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.page-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #222;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  padding: 6px 10px;
+  background: #f6f6f6;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.nav-link:hover {
+  background: #ededed;
+}
+
+.nav-button {
+  appearance: none;
+}
+
+/* ===== 詳細ページ：投稿ボタン等は無いが、下部は表示だけする ===== */
+.detail-bottom input[readonly] {
+  background: #f7f7f7;
+}
+
+/* ===== 読み取り専用テキストエリア ===== */
+.readonly-field .mini-textarea {
+  background: #f7f7f7;
+}
+
+/* main.cssに mini-textarea が無い場合に備えて最低限 */
+.mini-textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
